@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class PagamentoService {
@@ -43,4 +44,31 @@ public class PagamentoService {
         aluno.getPagamentos().add(pagamento);
         return pagamentoRepository.save(pagamento);
     }
+
+    @Transactional
+    public List<Pagamento> listarPagamentos() {
+        return pagamentoRepository.findAll();
+    }
+
+    @Transactional
+    public Pagamento consultarPagamento(Long pagamentoId) {
+        return pagamentoRepository.findById(pagamentoId)
+                .orElseThrow(() -> new IllegalArgumentException("Pagamento não encontrado"));
+    }
+
+    @Transactional
+    public List<Pagamento> listarPagamentosDoAluno(Long alunoId) {
+        Aluno aluno = alunoRepository.findById(alunoId)
+                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado"));
+        return pagamentoRepository.findByAluno(aluno);
+    }
+
+    @Transactional
+    public List<Pagamento> listarPagamentosDoAlunoPorStatus(Long alunoId, Pagamento.StatusPagamento status) {
+        Aluno aluno = alunoRepository.findById(alunoId)
+                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado"));
+
+        return pagamentoRepository.findByAlunoAndStatusPagamento(aluno, status);
+    }
+
 }

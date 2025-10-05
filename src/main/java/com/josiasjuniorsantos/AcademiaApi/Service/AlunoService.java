@@ -57,5 +57,42 @@ public class AlunoService {
         return pagamentoRepository.save(pagamento);
     }
 
+    @Transactional
+    public Aluno inativarAluno(Long alunoId) {
+        Aluno aluno = alunoRepository.findById(alunoId)
+                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado"));
+
+        aluno.setAtivo(false);
+        return alunoRepository.save(aluno);
+    }
+
+    @Transactional
+    public Aluno ativarAluno(Long alunoId) {
+        Aluno aluno = alunoRepository.findById(alunoId)
+                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado"));
+
+        aluno.setAtivo(true); // reativa o aluno
+        return alunoRepository.save(aluno);
+    }
+
+    @Transactional
+    public Aluno consultarAluno(Long alunoId) {
+        return alunoRepository.findById(alunoId)
+                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado"));
+    }
+
+    @Transactional
+    public Aluno atualizarAluno(Long alunoId, String nome, String email, Date dataNascimento, Plano plano) {
+        Aluno aluno = alunoRepository.findById(alunoId)
+                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado"));
+
+        aluno.setNome(nome);
+        aluno.setEmail(email);
+        aluno.setDataNascimento(dataNascimento);
+        aluno.setPlano(plano);
+
+        return alunoRepository.save(aluno);
+    }
+
 
 }
