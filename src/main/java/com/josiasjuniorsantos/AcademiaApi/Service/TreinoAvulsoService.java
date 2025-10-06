@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class TreinoAvulsoService {
@@ -63,4 +64,10 @@ public class TreinoAvulsoService {
 
         pagamentoRepository.save(treinoAvulso);
     }
+
+    @Transactional
+    public List<Pagamento> listarTreinosAvulsos() {
+        return pagamentoRepository.findByAluno_PlanoIsNullAndAluno_AtivoFalse();
+    }
+
 }

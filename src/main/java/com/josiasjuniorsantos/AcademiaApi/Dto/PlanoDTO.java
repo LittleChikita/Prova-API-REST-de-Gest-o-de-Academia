@@ -30,4 +30,12 @@ public class PlanoDTO {
     public void setValorMensal(BigDecimal valorMensal) {
         this.valorMensal = valorMensal;
     }
+
+    public static PlanoDTO fromEntity(com.josiasjuniorsantos.AcademiaApi.Model.Plano plano) {
+        PlanoDTO dto = new PlanoDTO();
+        dto.setId(plano.getId());
+        dto.setNome(plano.getNome());
+        dto.setValorMensal(plano.getValorMensal());
+        return dto;
+    }
 }

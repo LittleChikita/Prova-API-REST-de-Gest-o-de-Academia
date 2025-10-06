@@ -1,7 +1,9 @@
 package com.josiasjuniorsantos.AcademiaApi.Model;
 
+import com.josiasjuniorsantos.AcademiaApi.Anotation.Cpf;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -15,12 +17,12 @@ public class Aluno {
     private String nome;
     private String email;
 
+    @Cpf
     @Column(unique = true, nullable = false)
     private String cpf;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
 
     private boolean ativo = true;
 
@@ -66,11 +68,11 @@ public class Aluno {
         this.cpf = cpf;
     }
 
-    public Date getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(Date dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 

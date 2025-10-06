@@ -11,6 +11,6 @@ import java.util.List;
 public interface PagamentoRepository extends JpaRepository<Pagamento, Long> {
 
     List<Pagamento> findByAlunoId(Long alunoId);
-
+    List<Pagamento> findByAluno_PlanoIsNullAndAluno_AtivoFalse();
     List<Pagamento> findByCobrancaId(Long cobrancaId);
 }

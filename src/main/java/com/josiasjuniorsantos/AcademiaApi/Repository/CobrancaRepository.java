@@ -10,9 +10,7 @@ import java.util.List;
 @Repository
 public interface CobrancaRepository extends JpaRepository<Cobranca, Long> {
 
-    List<Cobranca> findByAluno(Aluno aluno);
-
     List<Cobranca> findByAlunoId(Long alunoId);
 
-    List<Cobranca> findByAlunoAndStatus(Aluno aluno, Cobranca.StatusCobranca status);
+    List<Cobranca> findByStatus(Cobranca.StatusCobranca status);
 }

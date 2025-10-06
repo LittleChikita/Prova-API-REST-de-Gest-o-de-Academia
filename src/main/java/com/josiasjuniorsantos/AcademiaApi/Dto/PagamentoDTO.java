@@ -42,4 +42,14 @@ public class PagamentoDTO {
 
     public Cobranca.StatusCobranca getStatus() { return status; }
     public void setStatus(Cobranca.StatusCobranca status) { this.status = status; }
+
+    public static PagamentoDTO fromEntity(Pagamento pagamento) {
+        PagamentoDTO dto = new PagamentoDTO();
+        dto.setId(pagamento.getId());
+        dto.setDataPagamento(pagamento.getDataPagamento());
+        dto.setFormaPagamento(pagamento.getFormaPagamento());
+        dto.setAlunoId(pagamento.getAluno() != null ? pagamento.getAluno().getId() : null);
+        dto.setCobrancaId(pagamento.getCobranca() != null ? pagamento.getCobranca().getId() : null);
+        return dto;
+    }
 }
