@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class AlunoService {
@@ -93,6 +94,17 @@ public class AlunoService {
 
         return alunoRepository.save(aluno);
     }
+
+    public List<Aluno> listarAlunos() {
+        return alunoRepository.findAll();
+    }
+
+    public void deletarAluno(Long id) {
+        Aluno aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado com id: " + id));
+        alunoRepository.delete(aluno);
+    }
+
 
 
 }

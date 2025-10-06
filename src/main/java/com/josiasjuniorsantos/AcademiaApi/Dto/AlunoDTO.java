@@ -1,16 +1,23 @@
 package com.josiasjuniorsantos.AcademiaApi.Dto;
 
-import com.josiasjuniorsantos.AcademiaApi.Model.Plano;
 import java.util.Date;
 
 public class AlunoDTO {
 
+    private Long id;
     private String nome;
     private String email;
     private String cpf;
     private Date dataNascimento;
-    private Plano plano;
+    private PlanoDTO plano;
     private boolean ativo;
+
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
@@ -24,8 +31,8 @@ public class AlunoDTO {
     public Date getDataNascimento() { return dataNascimento; }
     public void setDataNascimento(Date dataNascimento) { this.dataNascimento = dataNascimento; }
 
-    public Plano getPlano() { return plano; }
-    public void setPlano(Plano plano) { this.plano = plano; }
+    public PlanoDTO getPlano() { return plano; }
+    public void setPlano(PlanoDTO plano) { this.plano = plano; }
 
     public boolean isAtivo() { return ativo; }
     public void setAtivo(boolean ativo) { this.ativo = ativo; }
