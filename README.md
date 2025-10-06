@@ -20,7 +20,7 @@ A API utiliza H2 Database para testes locais, com suporte a inicialização ráp
 
 Tecnologias utilizadas
 
-Java 17
+Java 21
 
 Spring Boot
 
