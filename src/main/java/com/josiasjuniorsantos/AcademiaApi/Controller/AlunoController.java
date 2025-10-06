@@ -5,6 +5,10 @@ import com.josiasjuniorsantos.AcademiaApi.Model.Aluno;
 import com.josiasjuniorsantos.AcademiaApi.Model.Plano;
 import com.josiasjuniorsantos.AcademiaApi.Service.AlunoService;
 import com.josiasjuniorsantos.AcademiaApi.Service.PlanoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +28,11 @@ public class AlunoController {
         this.planoService = planoService;
     }
 
+    @Operation(summary = "Cadastrar novo aluno", description = "Cria um novo aluno com os dados fornecidos.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Aluno cadastrado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
     @PostMapping
     public ResponseEntity<AlunoDTO> cadastrarAluno(@RequestBody AlunoDTO alunoDTO) {
         Plano plano = null;
@@ -42,8 +51,13 @@ public class AlunoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(AlunoDTO.fromEntity(aluno));
     }
 
+    @Operation(summary = "Consultar aluno por ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Aluno encontrado"),
+            @ApiResponse(responseCode = "404", description = "Aluno não encontrado")
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<AlunoDTO> consultarAluno(@PathVariable Long id) {
+    public ResponseEntity<AlunoDTO> consultarAluno(@PathVariable @Parameter(description = "ID do aluno") Long id) {
         try {
             Aluno aluno = alunoService.consultarAluno(id);
             return ResponseEntity.ok(AlunoDTO.fromEntity(aluno));
@@ -52,6 +66,8 @@ public class AlunoController {
         }
     }
 
+    @Operation(summary = "Listar todos os alunos")
+    @ApiResponse(responseCode = "200", description = "Lista de alunos retornada com sucesso")
     @GetMapping
     public ResponseEntity<List<AlunoDTO>> listarAlunos() {
         List<AlunoDTO> lista = alunoService.listarAlunos()
@@ -62,6 +78,11 @@ public class AlunoController {
         return ResponseEntity.ok(lista);
     }
 
+    @Operation(summary = "Atualizar aluno")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Aluno atualizado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Aluno não encontrado")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<AlunoDTO> atualizarAluno(@PathVariable Long id,
                                                    @RequestBody AlunoDTO alunoDTO) {
@@ -85,6 +106,11 @@ public class AlunoController {
         }
     }
 
+    @Operation(summary = "Inativar aluno")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Aluno inativado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Aluno não encontrado")
+    })
     @PatchMapping("/{id}/inativar")
     public ResponseEntity<AlunoDTO> inativarAluno(@PathVariable Long id) {
         try {
@@ -95,6 +121,11 @@ public class AlunoController {
         }
     }
 
+    @Operation(summary = "Ativar aluno")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Aluno ativado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Aluno não encontrado")
+    })
     @PatchMapping("/{id}/ativar")
     public ResponseEntity<AlunoDTO> ativarAluno(@PathVariable Long id) {
         try {
@@ -105,6 +136,11 @@ public class AlunoController {
         }
     }
 
+    @Operation(summary = "Deletar aluno")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Aluno deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Aluno não encontrado")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarAluno(@PathVariable Long id) {
         try {

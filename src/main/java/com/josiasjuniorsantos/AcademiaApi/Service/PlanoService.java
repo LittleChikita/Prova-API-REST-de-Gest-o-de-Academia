@@ -27,7 +27,10 @@ public class PlanoService {
     }
 
     public void deletar(Long id) {
+        Plano plano = buscarPorId(id);
+        if (!plano.getAlunos().isEmpty()) {
+            throw new IllegalStateException("Não é possível deletar o plano. Existem alunos vinculados a ele.");
+        }
         repository.deleteById(id);
     }
-
 }
