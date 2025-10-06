@@ -8,15 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AlunoTreinoVinculoRepository extends JpaRepository<AlunoTreinoVinculo, Long> {
+public interface AlunoTreinoVinculoRepository extends JpaRepository<AlunoTreinoVinculo, AlunoTreinoId> {
 
     List<AlunoTreinoVinculo> findByAlunoId(Long alunoId);
-
     List<AlunoTreinoVinculo> findByTreinoId(Long treinoId);
-
     boolean existsByAlunoIdAndTreinoId(Long alunoId, Long treinoId);
-
-    void deleteById(AlunoTreinoId id);
-
-    boolean existsById(AlunoTreinoId id);
 }

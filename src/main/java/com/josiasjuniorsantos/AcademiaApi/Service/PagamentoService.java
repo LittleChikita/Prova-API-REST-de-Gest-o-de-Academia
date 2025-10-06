@@ -1,9 +1,9 @@
 package com.josiasjuniorsantos.AcademiaApi.Service;
 
-import com.josiasjuniorsantos.AcademiaApi.Model.Aluno;
 import com.josiasjuniorsantos.AcademiaApi.Model.Pagamento;
-import com.josiasjuniorsantos.AcademiaApi.Repository.AlunoRepository;
+import com.josiasjuniorsantos.AcademiaApi.Model.Cobranca;
 import com.josiasjuniorsantos.AcademiaApi.Repository.PagamentoRepository;
+import com.josiasjuniorsantos.AcademiaApi.Repository.CobrancaRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -14,34 +14,32 @@ import java.util.List;
 public class PagamentoService {
 
     private final PagamentoRepository pagamentoRepository;
-    private final AlunoRepository alunoRepository;
+    private final CobrancaRepository cobrancaRepository;
 
-    public PagamentoService(PagamentoRepository pagamentoRepository, AlunoRepository alunoRepository) {
+    public PagamentoService(PagamentoRepository pagamentoRepository, CobrancaRepository cobrancaRepository) {
         this.pagamentoRepository = pagamentoRepository;
-        this.alunoRepository = alunoRepository;
+        this.cobrancaRepository = cobrancaRepository;
     }
 
     @Transactional
-    public Pagamento salvarPagamento(Long alunoId, Pagamento.FormaPagamento formaPagamento, LocalDateTime dataVencimento) {
-        Aluno aluno = alunoRepository.findById(alunoId).orElseThrow(()-> new IllegalArgumentException("Aluno não encontrado"));
-
-        if(aluno.getPlano() == null){
-            throw new IllegalStateException("Aluno não possui plano associado.");
-        }
+    public Pagamento registrarPagamento(Long cobrancaId, Pagamento.FormaPagamento formaPagamento) {
+        Cobranca cobranca = cobrancaRepository.findById(cobrancaId)
+                .orElseThrow(() -> new IllegalArgumentException("Cobrança não encontrada"));
 
         Pagamento pagamento = new Pagamento();
-        pagamento.setAluno(aluno);
-        pagamento.setValorPagamento(aluno.getPlano().getValorMensal());
-        pagamento.setDataPagamento(LocalDateTime.now());
+        pagamento.setAluno(cobranca.getAluno());
+        pagamento.setCobranca(cobranca);
         pagamento.setFormaPagamento(formaPagamento);
+        pagamento.setDataPagamento(LocalDateTime.now());
 
-        if (pagamento.getDataPagamento().isAfter(dataVencimento)) {
-            pagamento.setStatusPagamento(Pagamento.StatusPagamento.ATRASADO);
+        if (LocalDateTime.now().isAfter(cobranca.getDataVencimento().atStartOfDay())) {
+            cobranca.setStatus(Cobranca.StatusCobranca.ATRASADA);
         } else {
-            pagamento.setStatusPagamento(Pagamento.StatusPagamento.PAGO);
+            cobranca.setStatus(Cobranca.StatusCobranca.PAGA);
         }
 
-        aluno.getPagamentos().add(pagamento);
+        cobranca.setPagamento(pagamento);
+
         return pagamentoRepository.save(pagamento);
     }
 
@@ -51,24 +49,13 @@ public class PagamentoService {
     }
 
     @Transactional
+    public List<Pagamento> listarPagamentosDoAluno(Long alunoId) {
+        return pagamentoRepository.findByAlunoId(alunoId);
+    }
+
+    @Transactional
     public Pagamento consultarPagamento(Long pagamentoId) {
         return pagamentoRepository.findById(pagamentoId)
                 .orElseThrow(() -> new IllegalArgumentException("Pagamento não encontrado"));
     }
-
-    @Transactional
-    public List<Pagamento> listarPagamentosDoAluno(Long alunoId) {
-        Aluno aluno = alunoRepository.findById(alunoId)
-                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado"));
-        return pagamentoRepository.findByAluno(aluno);
-    }
-
-    @Transactional
-    public List<Pagamento> listarPagamentosDoAlunoPorStatus(Long alunoId, Pagamento.StatusPagamento status) {
-        Aluno aluno = alunoRepository.findById(alunoId)
-                .orElseThrow(() -> new IllegalArgumentException("Aluno não encontrado"));
-
-        return pagamentoRepository.findByAlunoAndStatusPagamento(aluno, status);
-    }
-
 }

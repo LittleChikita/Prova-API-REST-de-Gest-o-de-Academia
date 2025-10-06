@@ -1,6 +1,5 @@
 package com.josiasjuniorsantos.AcademiaApi.Controller;
 
-import com.josiasjuniorsantos.AcademiaApi.Dto.AlunoTreinoVinculoDTO;
 import com.josiasjuniorsantos.AcademiaApi.Dto.TreinoDTO;
 import com.josiasjuniorsantos.AcademiaApi.Model.Treino;
 import com.josiasjuniorsantos.AcademiaApi.Service.TreinoService;
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/treinos")
+@RequestMapping("/api/v1/treinos")
 public class TreinoController {
 
     private final TreinoService treinoService;
@@ -53,25 +52,13 @@ public class TreinoController {
         treinoService.removerTreino(id);
     }
 
-
-    @PostMapping("/vincular")
-    public void vincularAlunoTreino(@RequestParam Long alunoId, @RequestParam Long treinoId) {
-        treinoService.vincularAlunoTreino(alunoId, treinoId);
-    }
-
-    @DeleteMapping("/vinculo")
-    public void removerVinculo(@RequestParam Long alunoId, @RequestParam Long treinoId) {
-        treinoService.removerVinculo(alunoId, treinoId);
-    }
-
     private TreinoDTO converterParaDTO(Treino treino) {
         TreinoDTO dto = new TreinoDTO();
+        dto.setId(treino.getId());
         dto.setNome(treino.getNome());
         dto.setDescricao(treino.getDescricao());
         dto.setNivel(treino.getNivel());
         return dto;
     }
-
-
-
 }
+

@@ -5,7 +5,6 @@ import com.josiasjuniorsantos.AcademiaApi.Model.Pagamento;
 import com.josiasjuniorsantos.AcademiaApi.Service.PagamentoService;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,14 +18,15 @@ public class PagamentoController {
         this.pagamentoService = pagamentoService;
     }
 
-    @PostMapping("/{alunoId}")
-    public PagamentoDTO registrarPagamento(@PathVariable Long alunoId,
-                                           @RequestParam Pagamento.FormaPagamento formaPagamento,
-                                           @RequestParam LocalDateTime dataVencimento) {
-        Pagamento pagamento = pagamentoService.salvarPagamento(alunoId, formaPagamento, dataVencimento);
+    // Endpoint para registrar um pagamento baseado em uma cobrança existente
+    @PostMapping
+    public PagamentoDTO registrarPagamento(@RequestParam Long cobrancaId,
+                                           @RequestParam Pagamento.FormaPagamento formaPagamento) {
+        Pagamento pagamento = pagamentoService.registrarPagamento(cobrancaId, formaPagamento);
         return converterParaDTO(pagamento);
     }
 
+    // Listar todos os pagamentos
     @GetMapping
     public List<PagamentoDTO> listarPagamentos() {
         return pagamentoService.listarPagamentos()
@@ -35,12 +35,7 @@ public class PagamentoController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}")
-    public PagamentoDTO consultarPagamento(@PathVariable Long id) {
-        Pagamento pagamento = pagamentoService.consultarPagamento(id);
-        return converterParaDTO(pagamento);
-    }
-
+    // Listar pagamentos de um aluno específico
     @GetMapping("/aluno/{alunoId}")
     public List<PagamentoDTO> listarPagamentosDoAluno(@PathVariable Long alunoId) {
         return pagamentoService.listarPagamentosDoAluno(alunoId)
@@ -49,22 +44,22 @@ public class PagamentoController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/aluno/{alunoId}/status")
-    public List<PagamentoDTO> listarPagamentosDoAlunoPorStatus(@PathVariable Long alunoId,
-                                                               @RequestParam Pagamento.StatusPagamento status) {
-        return pagamentoService.listarPagamentosDoAlunoPorStatus(alunoId, status)
-                .stream()
-                .map(this::converterParaDTO)
-                .collect(Collectors.toList());
+    // Consultar um pagamento específico
+    @GetMapping("/{id}")
+    public PagamentoDTO consultarPagamento(@PathVariable Long id) {
+        Pagamento pagamento = pagamentoService.consultarPagamento(id);
+        return converterParaDTO(pagamento);
     }
+
 
     private PagamentoDTO converterParaDTO(Pagamento pagamento) {
         PagamentoDTO dto = new PagamentoDTO();
         dto.setAlunoId(pagamento.getAluno().getId());
-        dto.setValorPagamento(pagamento.getValorPagamento());
+        dto.setValor(pagamento.getCobranca().getValor());
         dto.setDataPagamento(pagamento.getDataPagamento());
-        dto.setStatusPagamento(pagamento.getStatusPagamento());
         dto.setFormaPagamento(pagamento.getFormaPagamento());
+        dto.setStatus(pagamento.getCobranca().getStatus());
+        dto.setDataVencimento(pagamento.getCobranca().getDataVencimento());
         return dto;
     }
 }
