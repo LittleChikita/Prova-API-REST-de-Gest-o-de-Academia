@@ -47,6 +47,7 @@ Passos
 
 1.Clone o repositório:
 git clone https://github.com/LittleChikita/Prova-API-REST-de-Gest-o-de-Academia.git
+Depois digite o comando : 
 cd Prova-API-REST-de-Gest-o-de-Academia
 
 2. Compile o projeto:
